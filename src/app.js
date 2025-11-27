@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import morgan from 'morgan';
 import cors from 'cors';
 import employeeRoutes from './routes/employeeRoutes.js';
@@ -25,7 +26,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+  const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+  res.json({ status: 'ok', db: states[mongoose.connection.readyState] || 'unknown' });
 });
 
 app.use('/employees', employeeRoutes);
