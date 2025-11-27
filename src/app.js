@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import employeeRoutes from './routes/employeeRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
+import { ensureDb } from './middleware/ensureDb.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -30,8 +31,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', db: states[mongoose.connection.readyState] || 'unknown' });
 });
 
-app.use('/employees', employeeRoutes);
-app.use('/tasks', taskRoutes);
+// Ensure DB connection before hitting data routes
+app.use('/employees', ensureDb, employeeRoutes);
+app.use('/tasks', ensureDb, taskRoutes);
 
 // 404 handler for unknown routes
 app.use((req, res) => {
