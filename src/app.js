@@ -11,6 +11,19 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Root welcome/info route (useful for platforms like Vercel)
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Employee Tracker API',
+    status: 'ok',
+    endpoints: {
+      health: '/health',
+      employees: '/employees',
+      tasks: '/tasks'
+    }
+  });
+});
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
