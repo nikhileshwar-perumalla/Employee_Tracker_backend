@@ -31,6 +31,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', db: states[mongoose.connection.readyState] || 'unknown' });
 });
 
+// Minimal env check (does not expose secrets)
+app.get('/env-check', (req, res) => {
+  res.json({ hasMongoUri: Boolean(process.env.MONGODB_URI) });
+});
+
 // Ensure DB connection before hitting data routes
 app.use('/employees', ensureDb, employeeRoutes);
 app.use('/tasks', ensureDb, taskRoutes);
